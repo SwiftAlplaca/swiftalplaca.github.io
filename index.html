@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f8f9fb" />
+  <meta name="color-scheme" content="light" />
+  <title>NAME_HERE — TITLE_HERE</title>
+  <meta name="description" content="DESCRIPTION_HERE" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Geist:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <script>document.documentElement.classList.add('js')</script>
+
+  <style>
+    /* ---------- Palette: mist, navy ink, slate blue, soft grey, pale honey ---------- */
+    :root {
+      --background: oklch(0.982 0.004 250);
+      --foreground: oklch(0.25 0.03 258);
+      --card: oklch(1 0 0);
+      --primary: oklch(0.46 0.07 255);
+      --primary-foreground: oklch(0.985 0.003 250);
+      --secondary: oklch(0.95 0.008 250);
+      --secondary-foreground: oklch(0.32 0.03 258);
+      --muted-foreground: oklch(0.52 0.02 258);
+      --border: oklch(0.9 0.01 255);
+      --sparkle: oklch(0.8 0.1 82);
+      --primary-soft: oklch(0.46 0.07 255 / 0.3);
+      --primary-half: oklch(0.46 0.07 255 / 0.5);
+
+      --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --font-display: 'Young Serif', ui-serif, Georgia, serif;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; background: var(--background); }
+    body {
+      font-family: var(--font-sans);
+      background: var(--background);
+      color: var(--foreground);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-wrap: anywhere;
+    }
+    a { color: inherit; text-decoration: none; }
+    ul, ol { list-style: none; }
+    button { font: inherit; color: inherit; }
+    :focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; border-radius: 6px; }
+
+    .container { max-width: 48rem; margin: 0 auto; padding: 0 1.25rem; }
+    .display {
+      font-family: var(--font-display);
+      font-weight: 400;
+      letter-spacing: -0.005em;
+    }
+    .icon { width: 1rem; height: 1rem; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ---------- Tiny decor ---------- */
+    .sparkle, .star, .moon { display: inline-block; flex-shrink: 0; color: var(--sparkle); fill: var(--sparkle); stroke: var(--sparkle); stroke-width: 1.5; stroke-linejoin: round; }
+    .sparkle { width: 0.75rem; height: 0.75rem; animation: twinkle 3.2s ease-in-out infinite; }
+    .star { width: 0.625rem; height: 0.625rem; animation: twinkle 3.2s ease-in-out infinite; }
+    .moon { width: 0.875rem; height: 0.875rem; fill: oklch(0.8 0.1 82 / 0.4); }
+    .abs { position: absolute; }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.35; transform: scale(0.85) rotate(0deg); }
+      50% { opacity: 1; transform: scale(1) rotate(12deg); }
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .rise { animation: rise 0.7s var(--ease) both; }
+
+    /* ---------- Header ---------- */
+    .site-header {
+      position: sticky; top: 0; z-index: 20;
+      background: oklch(0.982 0.004 250 / 0.8);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid oklch(0.9 0.01 255 / 0.6);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-top: 1rem; padding-bottom: 1rem; }
+    .brand { display: flex; align-items: center; gap: 0.5rem; font-size: 1.0625rem; flex-shrink: 0; }
+    .nav ul { display: flex; align-items: center; gap: 0.875rem; min-width: 0; overflow-x: auto; scrollbar-width: none; font-size: 0.75rem; color: var(--muted-foreground); }
+    .nav ul::-webkit-scrollbar { display: none; }
+    .nav a { white-space: nowrap; overflow-wrap: normal; transition: color 0.2s; }
+    .nav ul a:hover { color: var(--foreground); }
+    .nav .hide-mobile { display: none; }
+    @media (max-width: 420px) { .nav .hide-xs { display: none; } }
+
+    /* ---------- Hero ---------- */
+    .hero { padding: 4rem 0; scroll-margin-top: 6rem; }
+    .hero-top { display: flex; flex-direction: column; gap: 1.5rem; }
+    .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--muted-foreground); }
+    .hero h1 {
+      position: relative; width: fit-content;
+      font-size: clamp(2.25rem, 9vw, 4.25rem);
+      line-height: 1.1;
+      padding-right: 2.5rem;
+    }
+    .hero h1 .sparkle { width: 1rem; height: 1rem; right: 0.75rem; top: 0; }
+    .hero h1 .star { right: 0; top: 1.75rem; animation-delay: 1.1s; }
+    .summary { max-width: 36rem; font-size: 1.125rem; color: var(--muted-foreground); text-wrap: pretty; }
+    .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.375rem;
+      border-radius: 999px; padding: 0.625rem 1.25rem;
+      font-size: 0.875rem; font-weight: 500;
+      transition: opacity 0.2s, background-color 0.2s;
+    }
+    .btn-primary { background: var(--primary); color: var(--primary-foreground); }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-outline { background: var(--card); border: 1px solid var(--border); }
+    .btn-outline:hover { background: var(--secondary); }
+    .strengths { margin-top: 3rem; }
+    .eyebrow { font-size: 0.75rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.2em; color: var(--muted-foreground); }
+    .strengths .eyebrow { margin-bottom: 0.75rem; }
+    .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chips li { border-radius: 999px; border: 1px solid var(--border); background: var(--card); padding: 0.375rem 0.875rem; font-size: 0.875rem; color: var(--secondary-foreground); }
+
+    /* ---------- Sections ---------- */
+    section { scroll-margin-top: 6rem; }
+    .section { padding-bottom: 5rem; }
+    .section-label { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 2rem; }
+
+    /* ---------- About ---------- */
+    .about-card { position: relative; border-radius: 1.75rem; border: 1px solid var(--border); background: var(--card); padding: 1.5rem; }
+    .about-card .moon { right: 1.5rem; top: 1.5rem; }
+    .about-card .star { right: 3rem; top: 2.5rem; animation-delay: 0.8s; }
+    .bio { display: flex; flex-direction: column; gap: 1rem; padding-right: 2rem; color: var(--secondary-foreground); text-wrap: pretty; }
+    .facts { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed var(--border); }
+    .facts div { display: flex; flex-direction: column; gap: 0.125rem; }
+    .facts dt { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted-foreground); }
+    .facts dd { font-size: 0.875rem; }
+
+    /* ---------- Timeline ---------- */
+    .timeline { position: relative; display: flex; flex-direction: column; gap: 0.5rem; }
+    .timeline::before {
+      content: ''; position: absolute; left: 5px; top: 0.75rem; bottom: 0.75rem;
+      border-left: 2px dotted var(--primary-soft);
+      transform-origin: top; transition: transform 1.4s var(--ease);
+    }
+    .js .timeline::before { transform: scaleY(0); }
+    .js .timeline.is-visible::before { transform: scaleY(1); }
+
+    .t-item { position: relative; padding-left: 2rem; transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+    .js .t-item { opacity: 0; transform: translateY(16px); }
+    .js .t-item.is-visible { opacity: 1; transform: translateY(0); }
+
+    .t-node {
+      position: absolute; left: 0; top: 1.5rem;
+      width: 12px; height: 12px; border-radius: 50%;
+      border: 2px solid var(--primary-half); background: var(--background);
+      transition: background-color 0.3s, border-color 0.3s, transform 0.3s;
+    }
+    .t-item:hover .t-node { transform: scale(1.2); }
+    .t-item.is-open .t-node { background: var(--primary); border-color: var(--primary); }
+
+    .t-card { border-radius: 1rem; border: 1px solid transparent; transition: background-color 0.3s, border-color 0.3s; }
+    .t-item:not(.is-open) .t-card:hover { background: oklch(1 0 0 / 0.7); }
+    .t-item.is-open .t-card { background: var(--card); border-color: var(--border); }
+
+    .t-toggle {
+      display: flex; width: 100%; align-items: flex-start; justify-content: space-between; gap: 1rem;
+      padding: 1rem; background: none; border: 0; border-radius: 1rem; text-align: left; cursor: pointer;
+    }
+    .t-head { display: flex; flex-direction: column; gap: 0.25rem; }
+    .t-date { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; color: var(--primary); font-variant-numeric: tabular-nums; }
+    .t-title { font-weight: 500; line-height: 1.35; text-wrap: pretty; }
+    .t-org { font-size: 0.875rem; color: var(--muted-foreground); }
+    .t-chevron {
+      margin-top: 1.25rem; display: flex; align-items: center; justify-content: center;
+      width: 1.75rem; height: 1.75rem; flex-shrink: 0;
+      border-radius: 50%; border: 1px solid var(--border); background: var(--background);
+      color: var(--muted-foreground); transition: transform 0.35s var(--ease);
+    }
+    .t-item.is-open .t-chevron { transform: rotate(180deg); }
+
+    .t-panel { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 0.5s var(--ease), opacity 0.5s var(--ease); }
+    .t-item.is-open .t-panel { grid-template-rows: 1fr; opacity: 1; }
+    .t-panel > div { overflow: hidden; min-height: 0; }
+
+    .details { display: flex; flex-direction: column; gap: 1rem; padding: 1rem 1rem 1.25rem; border-top: 1px dashed var(--border); font-size: 0.875rem; }
+    .detail { display: grid; gap: 0.25rem; }
+    .detail-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted-foreground); }
+    .detail-body { color: var(--secondary-foreground); line-height: 1.6; }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.375rem; }
+    .tags li { border-radius: 0.375rem; background: var(--secondary); padding: 0.125rem 0.5rem; font-size: 0.75rem; color: var(--secondary-foreground); }
+    .steps { display: flex; flex-direction: column; gap: 0.375rem; counter-reset: step; }
+    .steps li { display: flex; gap: 0.625rem; counter-increment: step; }
+    .steps li::before { content: counter(step) '.'; font-size: 0.75rem; font-weight: 500; line-height: 1.6rem; color: var(--primary); }
+    .results { display: flex; flex-direction: column; gap: 0.375rem; }
+    .results li { display: flex; align-items: center; gap: 0.5rem; font-weight: 500; color: var(--foreground); }
+    .results .sparkle { width: 0.625rem; height: 0.625rem; }
+    .t-end { padding-top: 0.5rem; }
+    .t-end .sparkle { animation-delay: 0.6s; }
+
+    /* ---------- Projects ---------- */
+    .projects { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+    .project {
+      display: flex; flex-direction: column; height: 100%; overflow: hidden;
+      border-radius: 1.75rem; border: 1px solid var(--border); background: var(--card);
+      transition: box-shadow 0.3s, transform 0.3s var(--ease);
+    }
+    .project:hover { box-shadow: 0 12px 32px -12px oklch(0.46 0.07 255 / 0.18); transform: translateY(-2px); }
+    .shot {
+      position: relative; aspect-ratio: 16 / 10; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--secondary); border-bottom: 1px dashed var(--border);
+    }
+    .shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s var(--ease); }
+    .project:hover .shot img { transform: scale(1.03); }
+    .shot-placeholder { font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.15em; color: var(--muted-foreground); }
+    .project-body { display: flex; flex: 1; flex-direction: column; gap: 0.75rem; padding: 1.25rem; }
+    .project-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+    .project-head h3 { font-size: 1rem; font-weight: 500; }
+    .project-head .icon { color: var(--muted-foreground); transition: transform 0.25s, color 0.25s; }
+    .project:hover .project-head .icon { color: var(--primary); transform: translate(2px, -2px); }
+    .project-desc { font-size: 0.875rem; color: var(--muted-foreground); }
+    .project-foot { margin-top: auto; padding-top: 0.5rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; }
+    .project-link { font-size: 0.75rem; font-weight: 500; color: var(--primary); }
+
+    /* ---------- Contact ---------- */
+    .contact { padding-bottom: 3rem; }
+    .contact-card {
+      position: relative; display: flex; flex-direction: column; align-items: center; gap: 1.25rem;
+      padding: 3.5rem 1.5rem; text-align: center;
+      border-radius: 1.75rem; border: 1px dashed var(--primary-soft); background: var(--card);
+    }
+    .contact-card .moon { left: 1.5rem; top: 1.5rem; }
+    .contact-card .star { right: 2rem; top: 2rem; animation-delay: 0.4s; }
+    .contact-card .sparkle { right: 3rem; bottom: 2rem; animation-delay: 1.4s; }
+    .contact-card h2 { font-size: clamp(1.75rem, 7.5vw, 3.25rem); line-height: 1.1; text-wrap: balance; }
+    .contact-card p { max-width: 28rem; color: var(--muted-foreground); text-wrap: pretty; }
+    .contact-card .btn { margin-top: 0.5rem; padding: 0.75rem 1.5rem; }
+    .social { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.875rem; color: var(--muted-foreground); transition: color 0.2s; }
+    .social:hover { color: var(--foreground); }
+    .site-footer { margin-top: 2.5rem; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 0.5rem; font-size: 0.75rem; color: var(--muted-foreground); }
+    .site-footer a:hover { color: var(--foreground); }
+
+    /* ---------- Larger screens ---------- */
+    @media (min-width: 640px) {
+      .nav ul { gap: 1.5rem; font-size: 0.875rem; }
+      .nav .hide-mobile { display: block; }
+      .hero { padding-top: 6rem; }
+      .about-card { padding: 2rem; }
+      .facts { grid-template-columns: 1fr 1fr; }
+      .t-toggle { padding: 1.25rem; }
+      .details { padding: 1rem 1.25rem 1.25rem; }
+      .detail { grid-template-columns: 7rem 1fr; gap: 1rem; }
+      .detail-label { padding-top: 0.125rem; }
+      .projects { grid-template-columns: 1fr 1fr; }
+      .projects .wide { grid-column: span 2; }
+      .site-footer { flex-direction: row; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .js .t-item { opacity: 1; transform: none; }
+      .js .timeline::before { transform: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Icon sprite (used via <svg><use href="#i-name"/></svg>) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></symbol>
+  </svg>
+
+  <!-- ================= HEADER ================= -->
+  <header class="site-header">
+    <div class="container nav">
+      <a href="#top" class="brand display">
+        <svg class="moon" aria-hidden="true"><use href="#i-moon"/></svg>
+        NAME_HERE
+      </a>
+      <nav aria-label="Main">
+        <ul>
+          <li class="hide-mobile"><a href="#about">LINK_HERE</a></li>
+          <li><a href="#timeline">LINK_HERE</a></li>
+          <li class="hide-xs"><a href="#projects">LINK_HERE</a></li>
+          <li><a href="#contact">LINK_HERE</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- ================= HERO ================= -->
+    <section id="top" class="hero" aria-labelledby="hero-name">
+      <div class="hero-top">
+        <p class="meta rise">
+          <svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>
+          LOCATION_HERE
+          <span aria-hidden="true">·</span>
+          TITLE_HERE
+        </p>
+
+        <h1 id="hero-name" class="display rise" style="animation-delay:80ms">
+          NAME_HERE
+          <svg class="sparkle abs" aria-hidden="true"><use href="#i-sparkle"/></svg>
+          <svg class="star abs" aria-hidden="true"><use href="#i-star"/></svg>
+        </h1>
+
+        <p class="summary rise" style="animation-delay:160ms">SUMMARY_HERE</p>
+
+        <div class="actions rise" style="animation-delay:240ms">
+          <a href="#contact" class="btn btn-primary">BUTTON_HERE</a>
+          <a href="URL_HERE" class="btn btn-outline">
+            BUTTON_HERE
+            <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="strengths rise" style="animation-delay:320ms">
+        <h2 class="eyebrow">SUBHEADING_HERE</h2>
+        <ul class="chips">
+          <li>STRENGTH_HERE</li>
+          <li>STRENGTH_HERE</li>
+          <li>STRENGTH_HERE</li>
+          <li>STRENGTH_HERE</li>
+          <li>STRENGTH_HERE</li>
+          <li>STRENGTH_HERE</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ================= ABOUT ================= -->
+    <section id="about" class="section" aria-labelledby="about-label">
+      <div class="section-label">
+        <svg class="sparkle" aria-hidden="true"><use href="#i-sparkle"/></svg>
+        <h2 id="about-label" class="eyebrow">SECTION_TITLE_HERE</h2>
+      </div>
+
+      <div class="about-card">
+        <svg class="moon abs" aria-hidden="true"><use href="#i-moon"/></svg>
+        <svg class="star abs" aria-hidden="true"><use href="#i-star"/></svg>
+
+        <div class="bio">
+          <p>BIO_HERE</p>
+          <p>BIO_HERE</p>
+        </div>
+
+        <dl class="facts">
+          <div><dt>LABEL_HERE</dt><dd>FACT_HERE</dd></div>
+          <div><dt>LABEL_HERE</dt><dd>FACT_HERE</dd></div>
+          <div><dt>LABEL_HERE</dt><dd>FACT_HERE</dd></div>
+          <div><dt>LABEL_HERE</dt><dd>FACT_HERE</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ================= TIMELINE ================= -->
+    <!-- Copy a whole <li class="t-item"> block to add more achievements. Give each new one unique ids (t-btn-5 / t-panel-5 etc). -->
+    <section id="timeline" class="section" aria-labelledby="timeline-label">
+      <div class="section-label">
+        <svg class="sparkle" aria-hidden="true"><use href="#i-sparkle"/></svg>
+        <h2 id="timeline-label" class="eyebrow">SECTION_TITLE_HERE</h2>
+      </div>
+
+      <ol class="timeline">
+        <!-- Achievement 1 (open by default) -->
+        <li class="t-item is-open">
+          <span class="t-node" aria-hidden="true"></span>
+          <div class="t-card">
+            <h3>
+              <button class="t-toggle" type="button" id="t-btn-1" aria-expanded="true" aria-controls="t-panel-1">
+                <span class="t-head">
+                  <span class="t-date">DATE_HERE</span>
+                  <span class="t-title">ACHIEVEMENT_HERE</span>
+                  <span class="t-org">ORGANISATION_HERE</span>
+                </span>
+                <span class="t-chevron"><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></span>
+              </button>
+            </h3>
+            <div class="t-panel" id="t-panel-1" role="region" aria-labelledby="t-btn-1">
+              <div>
+                <div class="details">
+                  <div class="detail"><p class="detail-label">LABEL_HERE</p><div class="detail-body">CHALLENGE_HERE</div></div>
+                  <div class="detail"><p class="detail-label">LABEL_HERE</p><div class="detail-body">ROLE_HERE</div></div>
+                  <div class="detail"><p class="detail-label">LABEL_HERE</p><div class="detail-body"><ul class="tags"><li>TOOL_HERE</li><li>TOOL_HERE</li><li>TOOL_HERE</li></ul></div></div>
+                  <div class="detail"><p class="detail-label">LABEL_HERE</p><div class="detail-body"><ol class="steps"><li>STEP_HERE</li><li>STEP_HERE</li><li>STEP_HERE</li></ol></div></div>
+                  <div class="detail"><p class="detail-label">LABEL_HERE</p><div class="detail-body"><ul class="results">
+                    <li><svg class="sparkle" aria-hidden="true"><use href="#i-sparkle"/></svg>RESULT_HERE</li>
+                    <li><svg class="sparkle" aria-hidden="true"><use href="#i-sparkle"/></svg>RESULT_HERE</li>
+                  </ul></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- Achievement 2 -->
+        <li class="t-item">
+          <span class="t-node" aria-hidden="true"></span>
+          <div class="t-card">
+            <h3>
+              <button class="t-toggle" type="button" id="t-btn-2" aria-expanded="false" aria-controls="t-panel-2">
+                <span class="t-head">
+                  <span class="t-date">DATE_HERE</span>
+                  <span class="t-title">ACHIEVEMENT_HERE</span>
+                  <span class="t-org">ORGANISATION_HERE</span>
+                </span>
+                <span class="t-chevron"><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></span>
+              </button>
+            </h3>
+            <div class="t-panel" id="t-panel-2" role="region" aria-labelledby="t-btn-2" inert>
+              <div>
+                <div class="details">
+                  <div class="detail"><p class="detail-label">LABEL_HERE</p><div class="detail-body">CHALLENGE_HERE</div></div>
+                  <div class="detail"><p class="detail-label">LABEL_HERE</p><div class="detail-body">ROLE_HERE</div></div>
+                  <div class="detail"><p class="detail-label">LABEL_HERE</p><div class="detail-body"><ul class="tags"><li>TOOL_HERE</li><li>TOOL_HERE</li><li>TOOL_HERE</li></ul></div></div>
+                  <div class="detail"><p class="detail-label">LABEL_HERE</p><div class="detail-body"><ol class="steps"><li>STEP_HERE</li><li>STEP_HERE</li><li>STEP_HERE</li></ol></div></div>
+                  <div class="detail"><p class="detail-label">LABEL_HERE</p><div class="detail-body"><ul class="results">
+                    <li><svg class="sparkle" aria-hidden="true"><use href="#i-sparkle"/></svg>RESULT_HERE</li>
+                    <li><svg class="sparkle" aria-hidden="true"><use href="#i-sparkle"/></svg>RESULT_HERE</li>
+                  </ul></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- Achievement 3 -->
+        <li class="t-item">
+          <span class="t-node" aria-hidden="true"></span>
+          <div class="t-card">
+            <h3>
+              <button class="t-toggle" type="button" id="t-btn-3" aria-expanded="false" aria-controls="t-panel-3">
+                <span class="t-head">
+                  <span class="t-date">DATE_HERE</span>
+                  <span class="t-title">ACHIEVEMENT_HERE</span>
+                  <span class="t-org">ORGANISATION_HERE</span>
+                </span>
+                <span class="t-chevron"><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></span>
+              </button>
+            </h3>
+            <div class="t-panel" id="t-panel-3" role="region" aria-labelledby="t-btn-3" inert>
+              <div>
+                <div class="details">
+                  <div class="detail"><p class="detail-label">LABEL_HERE</p><div class="detail-body">CHALLENGE_HERE</div></div>
+                  <div class="detail"><p class="detail-label">LABEL_HERE</p><div class="detail-body">ROLE_HERE</div></div>
+                  <div class="detail"><p class="detail-label">LABEL_HERE</p><div class="detail-body"><ul class="tags"><li>TOOL_HERE</li><li>TOOL_HERE</li><li>TOOL_HERE</li></ul></div></div>
+                  <div class="detail"><p class="detail-label">LABEL_HERE</p><div class="detail-body"><ol class="steps"><li>STEP_HERE</li><li>STEP_HERE</li><li>STEP_HERE</li></ol></div></div>
+                  <div class="detail"><p class="detail-label">LABEL_HERE</p><div class="detail-body"><ul class="results">
+                    <li><svg class="sparkle" aria-hidden="true"><use href="#i-sparkle"/></svg>RESULT_HERE</li>
+                    <li><svg class="sparkle" aria-hidden="true"><use href="#i-sparkle"/></svg>RESULT_HERE</li>
+                  </ul></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <!-- Achievement 4 -->
+        <li class="t-item">
+          <span class="t-node" aria-hidden="true"></span>
+          <div class="t-card">
+            <h3>
+              <button class="t-toggle" type="button" id="t-btn-4" aria-expanded="false" aria-controls="t-panel-4">
+                <span class="t-head">
+                  <span class="t-date">DATE_HERE</span>
+                  <span class="t-title">ACHIEVEMENT_HERE</span>
+                  <span class="t-org">ORGANISATION_HERE</span>
+                </span>
+                <span class="t-chevron"><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></span>
+              </button>
+            </h3>
+            <div class="t-panel" id="t-panel-4" role="region" aria-labelledby="t-btn-4" inert>
+              <div>
+                <div class="details">
+                  <div class="detail"><p class="detail-label">LABEL_HERE</p><div class="detail-body">CHALLENGE_HERE</div></div>
+                  <div class="detail"><p class="detail-label">LABEL_HERE</p><div class="detail-body">ROLE_HERE</div></div>
+                  <div class="detail"><p class="detail-label">LABEL_HERE</p><div class="detail-body"><ul class="tags"><li>TOOL_HERE</li><li>TOOL_HERE</li><li>TOOL_HERE</li></ul></div></div>
+                  <div class="detail"><p class="detail-label">LABEL_HERE</p><div class="detail-body"><ol class="steps"><li>STEP_HERE</li><li>STEP_HERE</li><li>STEP_HERE</li></ol></div></div>
+                  <div class="detail"><p class="detail-label">LABEL_HERE</p><div class="detail-body"><ul class="results">
+                    <li><svg class="sparkle" aria-hidden="true"><use href="#i-sparkle"/></svg>RESULT_HERE</li>
+                    <li><svg class="sparkle" aria-hidden="true"><use href="#i-sparkle"/></svg>RESULT_HERE</li>
+                  </ul></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="t-end" aria-hidden="true">
+          <svg class="sparkle" style="margin-left:-1px"><use href="#i-sparkle"/></svg>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ================= PROJECTS ================= -->
+    <!-- To add a real screenshot: replace <span class="shot-placeholder">SCREENSHOT_HERE</span>
+         with <img src="images/your-file.png" alt="Short description" loading="lazy" /> -->
+    <section id="projects" class="section" aria-labelledby="projects-label">
+      <div class="section-label">
+        <svg class="sparkle" aria-hidden="true"><use href="#i-sparkle"/></svg>
+        <h2 id="projects-label" class="eyebrow">SECTION_TITLE_HERE</h2>
+      </div>
+
+      <ul class="projects">
+        <li class="wide">
+          <a href="URL_HERE" class="project">
+            <div class="shot"><span class="shot-placeholder">SCREENSHOT_HERE</span></div>
+            <div class="project-body">
+              <div class="project-head">
+                <h3>PROJECT_TITLE_HERE</h3>
+                <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>
+              </div>
+              <p class="project-desc">DESCRIPTION_HERE</p>
+              <div class="project-foot">
+                <ul class="tags"><li>TAG_HERE</li><li>TAG_HERE</li></ul>
+                <span class="project-link">LINK_TEXT_HERE</span>
+              </div>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="URL_HERE" class="project">
+            <div class="shot"><span class="shot-placeholder">SCREENSHOT_HERE</span></div>
+            <div class="project-body">
+              <div class="project-head">
+                <h3>PROJECT_TITLE_HERE</h3>
+                <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>
+              </div>
+              <p class="project-desc">DESCRIPTION_HERE</p>
+              <div class="project-foot">
+                <ul class="tags"><li>TAG_HERE</li><li>TAG_HERE</li></ul>
+                <span class="project-link">LINK_TEXT_HERE</span>
+              </div>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="URL_HERE" class="project">
+            <div class="shot"><span class="shot-placeholder">SCREENSHOT_HERE</span></div>
+            <div class="project-body">
+              <div class="project-head">
+                <h3>PROJECT_TITLE_HERE</h3>
+                <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg>
+              </div>
+              <p class="project-desc">DESCRIPTION_HERE</p>
+              <div class="project-foot">
+                <ul class="tags"><li>TAG_HERE</li><li>TAG_HERE</li></ul>
+                <span class="project-link">LINK_TEXT_HERE</span>
+              </div>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ================= CONTACT ================= -->
+    <section id="contact" class="contact" aria-labelledby="contact-heading">
+      <div class="contact-card">
+        <svg class="moon abs" aria-hidden="true"><use href="#i-moon"/></svg>
+        <svg class="star abs" aria-hidden="true"><use href="#i-star"/></svg>
+        <svg class="sparkle abs" aria-hidden="true"><use href="#i-sparkle"/></svg>
+
+        <p class="eyebrow">SUBHEADING_HERE</p>
+        <h2 id="contact-heading" class="display">HEADING_HERE</h2>
+        <p>DESCRIPTION_HERE</p>
+        <a href="mailto:EMAIL_HERE" class="btn btn-primary">
+          <svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg>
+          EMAIL_HERE
+        </a>
+        <a href="URL_HERE" class="social" target="_blank" rel="noopener noreferrer">
+          SOCIAL_LINK_HERE
+          <svg class="icon" style="width:.875rem;height:.875rem" aria-hidden="true"><use href="#i-arrow"/></svg>
+        </a>
+      </div>
+
+      <footer class="site-footer">
+        <p>&copy; YEAR_HERE NAME_HERE</p>
+        <a href="#top">BACK_TO_TOP_HERE</a>
+      </footer>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var items = Array.prototype.slice.call(document.querySelectorAll('.t-item'));
+
+      function setOpen(item, open) {
+        var button = item.querySelector('.t-toggle');
+        var panel = item.querySelector('.t-panel');
+        item.classList.toggle('is-open', open);
+        button.setAttribute('aria-expanded', String(open));
+        if (open) panel.removeAttribute('inert');
+        else panel.setAttribute('inert', '');
+      }
+
+      items.forEach(function (item) {
+        item.querySelector('.t-toggle').addEventListener('click', function () {
+          var willOpen = !item.classList.contains('is-open');
+          items.forEach(function (other) { setOpen(other, false); });
+          if (willOpen) setOpen(item, true);
+        });
+      });
+
+      var timeline = document.querySelector('.timeline');
+      if (!('IntersectionObserver' in window)) {
+        timeline.classList.add('is-visible');
+        items.forEach(function (item) { item.classList.add('is-visible'); });
+        return;
+      }
+
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        });
+      }, { threshold: 0.15 });
+
+      observer.observe(timeline);
+      items.forEach(function (item, index) {
+        item.style.transitionDelay = index * 90 + 'ms';
+        observer.observe(item);
+      });
+    })();
+  </script>
+</body>
+</html>
